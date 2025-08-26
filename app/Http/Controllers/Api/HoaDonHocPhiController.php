@@ -63,6 +63,7 @@ class HoaDonHocPhiController extends Controller
             'ngay_lap' => Carbon::now()->toDateString(), // ngày hiện tại
             'ngay_het_han' => $request->ngay_het_han,
             'tong_tien' => $tongTien,
+            'trang_thai' => 'Chưa thanh toán'
         ]);
 
         return response()->json([
@@ -115,5 +116,16 @@ class HoaDonHocPhiController extends Controller
             ->get();
 
         return response()->json($hoaDons);
+    }
+    public function updateTrangThai($id)
+    {
+        $hoaDon = HoaDonHocPhi::findOrFail($id);
+        $hoaDon->trang_thai = 'Đã thanh toán';
+        $hoaDon->save();
+
+        return response()->json([
+            'message' => 'Cập nhật trạng thái thành công',
+            'hoa_don' => $hoaDon
+        ]);
     }
 }

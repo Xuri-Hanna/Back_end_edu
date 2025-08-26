@@ -22,6 +22,7 @@ class LopHocController extends Controller
     {
         $validated = $request->validate([
             'ten_lop'       => 'required|string|max:255',
+            'nam_hoc'       => 'required|string|max:255',
             'mon_hoc_id'    => 'required|string|exists:mon_hoc,id',
             'giao_vien_id'  => 'required|string|exists:giao_vien,id',
             'ngay_bat_dau'  => 'required|date',
@@ -70,13 +71,14 @@ class LopHocController extends Controller
 
         $validated = $request->validate([
             'ten_lop'       => 'sometimes|required|string|max:255',
+            'nam_hoc'       => 'sometimes|required|string',
             'mon_hoc_id'    => 'sometimes|required|string|exists:mon_hoc,id',
             'giao_vien_id'  => 'sometimes|required|string|exists:giao_vien,id',
             'ngay_bat_dau'  => 'sometimes|required|date',
             'ngay_ket_thuc' => 'sometimes|required|date|after_or_equal:ngay_bat_dau',
             'so_luong'      => 'sometimes|required|integer|min:1',
             'phong_hoc_id'  => 'sometimes|required|string|exists:phong_hoc,id',
-             'trang_thai'    => 'required|string|in:Sắp mở,Đang học,Đã hủy,Đã kết thúc',
+            'trang_thai'    => 'required|string|in:Sắp mở,Đang học,Đã hủy,Đã kết thúc',
             'don_gia'       => 'sometimes|required|numeric|min:0',
             'so_buoi'       => 'sometimes|required|integer|min:1',
         ]);
@@ -109,6 +111,5 @@ class LopHocController extends Controller
 
         return response()->json($lopHocs);
     }
-
 
 }

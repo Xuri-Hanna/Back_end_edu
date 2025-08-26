@@ -22,6 +22,7 @@ class HoaDonHocPhi extends Model
         'ngay_het_han',
         'ngay_lap',
         'tong_tien',
+        'trang_thai'
     ];
 
 

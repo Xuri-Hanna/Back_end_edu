@@ -17,6 +17,7 @@ class LopHoc extends Model
     protected $fillable = [
         'id',
         'ten_lop',
+        'nam_hoc',
         'mon_hoc_id',
         'giao_vien_id',
         'ngay_bat_dau',

@@ -65,3 +65,5 @@ Route::get('/lop_hocs/{lop_hoc_id}/hoc_sinhs/not_in', [ChiTietLopHocController::
 Route::apiResource('/hoa_don_hoc_phis',HoaDonHocPhiController::class);
 Route::get('/hoc_sinh/{id}/lop-hoc', [ChiTietLopHocController::class, 'getLopHocByHocSinh']);
 Route::get('/hoa_don/hoc_sinh/{id}', [HoaDonHocPhiController::class, 'getByHocSinh']);
+Route::patch('/hoa_don_hoc_phis/{id}/trang_thai', [HoaDonHocPhiController::class, 'updateTrangThai']);
+

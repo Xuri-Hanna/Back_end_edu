@@ -100,5 +100,4 @@ class ChiTietLopHocController extends Controller
         return response()->json($lopHocs);
     }
 
-
 }
