@@ -20,11 +20,16 @@ class HopDongThuePhong extends Model
         'phieu_thue_phong_id',
         'dieu_khoan',
         'thanh_tien',
+        'cong_no_id'
     ];
 
     // Quan hệ: Hợp đồng thuộc về phiếu thuê phòng
     public function phieuThuePhong()
     {
         return $this->belongsTo(PhieuThuePhong::class, 'phieu_thue_phong_id', 'id');
+    }
+    public function congNo()
+    {
+        return $this->belongsTo(CongNo::class, 'cong_no_id', 'id');
     }
 }

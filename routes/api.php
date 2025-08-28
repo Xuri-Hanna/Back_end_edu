@@ -16,6 +16,10 @@ use App\Http\Controllers\api\LopHocController;
 use App\Http\Controllers\api\ChiTietLopHocController;
 use App\Http\Controllers\api\LichDayController;
 use App\Http\Controllers\api\HoaDonHocPhiController;
+use App\Http\Controllers\api\PhieuThuePhongController;
+use App\Http\Controllers\api\HopDongThuePhongController;
+use App\Http\Controllers\api\HoaDonThuePhongController;
+use App\Http\Controllers\api\CongNoController;
 
 
 Route::middleware('api')->get('/user', function (Request $request) {
@@ -66,4 +70,17 @@ Route::apiResource('/hoa_don_hoc_phis',HoaDonHocPhiController::class);
 Route::get('/hoc_sinh/{id}/lop-hoc', [ChiTietLopHocController::class, 'getLopHocByHocSinh']);
 Route::get('/hoa_don/hoc_sinh/{id}', [HoaDonHocPhiController::class, 'getByHocSinh']);
 Route::patch('/hoa_don_hoc_phis/{id}/trang_thai', [HoaDonHocPhiController::class, 'updateTrangThai']);
+
+//THUE PHÒNG
+Route::apiResource('phieu_thue_phongs',PhieuThuePhongController::class);
+Route::get('/hop_dong_thue_phongs', [HopDongThuePhongController::class, 'index']);
+Route::get('/phieu_thue_phong/chua_co_hop_dongs', [PhieuThuePhongController::class, 'getChuaCoHopDong']);
+Route::post('/hop_dong_thue_phongs', [HopDongThuePhongController::class, 'store']);
+Route::get('/hop_dong_thue_phongs/by-phieu/{phieuId}', [HopDongThuePhongController::class, 'getByPhieu']);
+Route::get('/kiem_tra_hop_dong/{phieuId}', [HopDongThuePhongController::class, 'kiemTraHopDong']);
+Route::post('/hoa_don_thue_phongs', [HoaDonThuePhongController::class, 'store']);
+Route::get('/hoa_don_thue_phong/hop_dong/{hopDongId}', [HoaDonThuePhongController::class, 'getByHopDong']);
+Route::delete('/hoa_don/hop_dong/{hopDongId}', [HoaDonThuePhongController::class, 'deleteByHopDong']);
+Route::get('/hop_dong/{id}/cong_no', [HopDongThuePhongController::class, 'congNo']);
+Route::get('/cong_no/{id}', [CongNoController::class, 'show']);
 

@@ -21,6 +21,8 @@ class PhieuThuePhong extends Model
         'phong_hoc_id',
         'tu_ngay',
         'den_ngay',
+        'lich_thue',
+        'trang_thai'
     ];
 
     public function nhanVien()
@@ -36,5 +38,16 @@ class PhieuThuePhong extends Model
     public function phongHoc()
     {
         return $this->belongsTo(PhongHoc::class, 'phong_hoc_id', 'id');
+    }
+    public function hopDongThuePhong()
+    {
+        return $this->hasOne(HopDongThuePhong::class, 'phieu_thue_phong_id', 'id');
+    }
+
+    public function getTrangThaiLabelAttribute()
+    {
+        return $this->trang_thai === 'Đã có hợp đồng'
+            ? '✅ Đã có hợp đồng'
+            : '⏳ Chưa có hợp đồng';
     }
 }
