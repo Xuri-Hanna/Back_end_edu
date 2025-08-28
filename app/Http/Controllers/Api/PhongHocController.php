@@ -24,6 +24,7 @@ class PhongHocController extends Controller
             'vi_tri_phong' => 'required|string|max:255',
             'so_cho_ngoi'  => 'required|integer|min:1',
             'gia_phong'    => 'nullable|numeric',
+            'ghi_chu'      => 'nullable|string'
         ]);
 
         // Lấy ID lớn nhất hiện tại
@@ -41,7 +42,7 @@ class PhongHocController extends Controller
             'vi_tri_phong'=> $request->vi_tri_phong,
             'so_cho_ngoi' => $request->so_cho_ngoi,
             'gia_phong'   => $request->gia_phong,
-            'trang_thai'  => 'Chưa sử dụng', // mặc định
+            'ghi_chu'     => $request->ghi_chu,
         ]);
 
         return response()->json([
@@ -53,20 +54,26 @@ class PhongHocController extends Controller
     // Cập nhật thông tin phòng học
     public function update(Request $request, $id)
     {
-        $phongHoc = PhongHoc::findOrFail($id);
+        $phongHoc  = PhongHoc::find($id);
+        if (!$phongHoc) {
+            return response()->json(['error' => 'Phòng không tồn tại'], 404);
+        }
+
 
         $request->validate([
             'so_phong'     => 'required|string|max:50',
             'vi_tri_phong' => 'required|string|max:255',
             'so_cho_ngoi'  => 'required|integer|min:1',
             'gia_phong'    => 'nullable|numeric',
+            'ghi_chu'      => 'nullable|string'
         ]);
 
-        $phongHoc->update($request->all());
 
-        // Kiểm tra nếu phòng này đã được dùng ở bảng khác → cập nhật trạng thái
-        if ($this->checkPhongHocIsUsed($id)) {
-            $phongHoc->update(['trang_thai' => 'Đã sử dụng']);
+        try
+         {
+            $phongHoc->update($request->all());
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
         }
 
         return response()->json([

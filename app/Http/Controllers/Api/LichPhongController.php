@@ -36,5 +36,19 @@ class LichPhongController extends Controller
         DB::table('lich_phong')->update(['trang_thai' => 'Chưa sử dụng']);
         return response()->json(['message' => 'Đã reset toàn bộ lịch']);
     }
+    public function updateNote(Request $request)
+    {
+        $lich = LichPhong::updateOrCreate(
+            [
+                'phong_id' => $request->phong_id,
+                'thu' => $request->thu,
+                'buoi' => $request->buoi,
+            ],
+            ['ghi_chu' => $request->ghi_chu]
+        );
+
+        return response()->json($lich);
+    }
+
 
 }
