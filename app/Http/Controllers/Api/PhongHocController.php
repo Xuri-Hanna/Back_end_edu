@@ -16,6 +16,18 @@ class PhongHocController extends Controller
         return response()->json($phongHoc);
     }
 
+    public function search(Request $request)
+    {
+        $keyword = $request->input('keyword');
+
+        $phongHoc = PhongHoc::when($keyword, function ($query, $keyword) {
+            $query->where('id', 'like', "%{$keyword}%")
+                ->orWhere('so_phong', 'like', "%{$keyword}%");
+        })->get();
+
+        return response()->json($phongHoc, 200);
+    }
+
     // Thêm phòng học mới
     public function store(Request $request)
     {

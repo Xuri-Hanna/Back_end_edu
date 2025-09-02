@@ -15,6 +15,19 @@ class MonHocController extends Controller
         return response()->json($monHocs);
     }
 
+    public function search(Request $request)
+    {
+        $keyword = $request->input('keyword');
+
+        $monHocs = MonHoc::when($keyword, function ($query, $keyword) {
+            $query->where('id', 'like', "%{$keyword}%")
+                ->orWhere('mon_hoc', 'like', "%{$keyword}%")
+                ->orWhere('khoi_lop', 'like', "%{$keyword}%");
+        })->get();
+
+        return response()->json($monHocs, 200);
+    }
+
     // Lấy chi tiết 1 môn học theo id
     public function show($id)
     {
