@@ -4,6 +4,7 @@ namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
 use App\Models\LichDay;
+use App\Models\LopHoc;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 
@@ -41,4 +42,38 @@ class LichDayController extends Controller
             return response()->json(['message' => 'Đã xóa lịch']);
         }
     }
+    public function lichDayDangHoc()
+    {
+        $lops = LopHoc::with(['giaoViens', 'lichDays','phongHoc'])
+            ->where('trang_thai', 'Đang học')
+            ->get();
+
+        return response()->json($lops);
+    }
+    // App\Http\Controllers\LopHocController.php
+   public function indexWithSchedule()
+    {
+        $lopHocs = LopHoc::with(['lichDays', 'giaoViens', 'phongHoc'])
+            ->where('trang_thai', 'Đang học')
+            ->get();
+
+        $result = $lopHocs->map(function ($lop) {
+            return [
+                'id' => $lop->id,
+                'ten_lop' => $lop->ten_lop,
+                'ten_giao_vien' => optional($lop->giaoVien)->ten_giao_vien, // tránh lỗi null
+                'lich_day' => $lop->lichDay
+                    ? $lop->lichDay->map(function ($lich) {
+                        return [
+                            'thu' => $lich->thu,
+                            'buoi' => $lich->buoi,
+                        ];
+                    })
+                    : [] // nếu null thì trả về mảng rỗng
+            ];
+        });
+
+        return response()->json($result);
+    }
+
 }

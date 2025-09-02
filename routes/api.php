@@ -56,6 +56,8 @@ Route::post('/lich_phong_resets', [LichPhongController::class, 'reset']);
 Route::get('/lop_hocs/{lopHoc}/lich_day', [LichDayController::class, 'index']);        // load lịch của lớp
 Route::post('/lop_hocs/{lopHoc}/lich_day/toggle', [LichDayController::class, 'toggle']); // tick/untick ngay
 Route::get('lop_hocs/giao_vien/{giao_vien_id}', [LopHocController::class, 'getLopHocByGiaoVien']);
+Route::get('lich_day/dang_hocs', [LichDayController::class, 'lichDayDangHoc']);
+Route::get('/lop_hocs_with_schedules', [LichDayController::class, 'indexWithSchedule']);
 
 
 //LOP_HOC

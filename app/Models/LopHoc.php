@@ -64,4 +64,10 @@ class LopHoc extends Model
     {
         return $this->hasMany(HoaDonHocPhi::class, 'lop_hoc_id', 'id');
     }
+    // app/Models/LopHoc.php
+    public function giaoViens()
+    {
+        return $this->belongsTo(GiaoVien::class, 'giao_vien_id');
+    }
+
 }
