@@ -41,6 +41,7 @@ class PhieuThuePhongController extends Controller
             'den_ngay' => 'required|date|after_or_equal:tu_ngay',
             'lich_thue' => 'nullable|string|max:50',
             'trang_thai' => 'required|in:Đã có hợp đồng,Chưa có hợp đồng',
+            'ngay_lap'  =>  'nullable|date'
         ]);
 
        // Lấy ID cuối cùng trong DB
@@ -66,6 +67,7 @@ class PhieuThuePhongController extends Controller
             'den_ngay' => $request->den_ngay,
             'lich_thue' => $request->lich_thue,
             'trang_thai' => $request->trang_thai,
+            'ngay_lap'  =>  $request->ngay_lap
         ]);
 
         return response()->json([
@@ -84,6 +86,7 @@ class PhieuThuePhongController extends Controller
             'tu_ngay' => 'required|date',
             'den_ngay' => 'required|date|after_or_equal:tu_ngay',
             'lich_thue' => 'nullable|string|max:50',
+            'ngay_lap'  =>  'nullable|date'
         ]);
 
         $phieuThue = PhieuThuePhong::findOrFail($id);

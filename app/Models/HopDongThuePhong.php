@@ -20,7 +20,9 @@ class HopDongThuePhong extends Model
         'phieu_thue_phong_id',
         'dieu_khoan',
         'thanh_tien',
-        'cong_no_id'
+        'cong_no_id',
+        'ngay_lap',
+        'han_hop_dong'
     ];
 
     // Quan hệ: Hợp đồng thuộc về phiếu thuê phòng

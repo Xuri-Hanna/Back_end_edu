@@ -25,6 +25,7 @@ class HoaDonThuePhongController extends Controller
             'hop_dong_id' => 'required|exists:hop_dong_thue_phong,id',
             'ngay_lap' => 'required|date',
             'tong_tien' => 'required|numeric|min:0',
+            'nhan_vien_id'  => 'required|exists:nhan_vien,id',
         ]);
 
         // Tạo ID tự động (HDTxxx)
@@ -44,26 +45,8 @@ class HoaDonThuePhongController extends Controller
             'hop_dong_id' => $request->hop_dong_id,
             'ngay_lap' => $request->ngay_lap,
             'tong_tien' => $request->tong_tien,
+            'nhan_vien_id'  => $request->nhan_vien_id
         ]);
-             // --- Cập nhật công nợ ---
-        $hopDong = \App\Models\HopDongThuePhong::with('congNo')->find('hop_dong_id');
-
-        if ($hopDong && $hopDong->congNo) {
-            $congNo = $hopDong->congNo;
-
-            // Cập nhật số tiền đã trả
-            $congNo->da_tra += 'tong_tien';
-
-            // Cập nhật tiền nợ = tổng nợ - đã trả
-            $congNo->tien_no = max(0, $congNo->tien_no - 'tong_tien');
-            $congNo->save();
-
-            // Nếu không còn nợ thì đổi trạng thái hợp đồng
-            if ($congNo->tien_no == 0) {
-                $hopDong->trang_thai = 'Đã thanh toán';
-                $hopDong->save();
-            }
-        }
 
         return response()->json([
             'message' => 'Tạo hóa đơn thành công',
@@ -74,7 +57,10 @@ class HoaDonThuePhongController extends Controller
      // Xem danh sách hóa đơn theo mã hợp đồng
     public function getByHopDong($hopDongId)
     {
-        $hoaDons = HoaDonThuePhong::where('hop_dong_id', $hopDongId)->get();
+        $hoaDons = HoaDonThuePhong::with('nhanVien:id,ho_ten')
+            ->where('hop_dong_id', $hopDongId)
+            ->get();
+
         return response()->json([
             'status' => 'success',
             'data' => $hoaDons

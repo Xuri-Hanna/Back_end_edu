@@ -9,6 +9,7 @@ use App\Models\PhieuThuePhong;
 use Illuminate\Support\Str;
 use App\Models\HopDongThuePhong;
 use App\Models\CongNo;
+use Illuminate\Support\Facades\DB;
 class HopDongThuePhongController extends Controller
 {
     public function index()
@@ -25,6 +26,7 @@ class HopDongThuePhongController extends Controller
         $request->validate([
             'phieu_thue_phong_id' => 'required|exists:phieu_thue_phong,id',
             'dieu_khoan' => 'required|string',
+            'ngay_lap'  =>  'nullable|date'
         ]);
 
         $phieu = PhieuThuePhong::with('phongHoc')->findOrFail($request->phieu_thue_phong_id);
@@ -61,6 +63,7 @@ class HopDongThuePhongController extends Controller
             'dieu_khoan' => $request->dieu_khoan,
             'thanh_tien' => $thanhTien,
             'cong_no_id' => $congNo->id,
+            'ngay_lap'  =>  $request->ngay_lap
         ]);
 
         // Cập nhật trạng thái phiếu thuê
@@ -91,7 +94,7 @@ class HopDongThuePhongController extends Controller
             'nhanVien.chucVu',
             'nguoiThuePhong',
             'phongHoc',
-            'hopDongThuePhong' // cần có quan hệ này trong model
+            'hopDongThuePhong'
         ])->findOrFail($phieuId);
 
         // Format dữ liệu trả về
@@ -120,6 +123,7 @@ class HopDongThuePhongController extends Controller
                 'thanh_tien' => $phieuThue->hopDongThuePhong->thanh_tien ?? '',
                 'trang_thai' => $phieuThue->hopDongThuePhong->trang_thai ?? '',
                 'cong_no_id' => $phieuThue->hopDongThuePhong->cong_no_id ?? '',
+                'id'         => $phieuThue->hopDongThuePhong->id ?? '',
             ]
         ];
 
@@ -157,22 +161,37 @@ class HopDongThuePhongController extends Controller
             'da_tra'     => $congNo->da_tra,
         ]);
     }
-
-
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
+    public function updateTrangThai(Request $request, $id)
     {
-        //
+        $hopDong = HopDongThuePhong::findOrFail($id);
+        $hopDong->han_hop_dong = $request->han_hop_dong;
+        $hopDong->save();
+
+        return response()->json(['success' => true, 'data' => $hopDong]);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
+// API trả về số lượng hợp đồng theo trạng thái
+    public function thongKeTrangThai()
     {
-        //
+        $counts = HopDongThuePhong::select('han_hop_dong', DB::raw('count(*) as total'))
+            ->groupBy('han_hop_dong')
+            ->get();
+
+        // Đảm bảo luôn có đủ 4 trạng thái, kể cả khi 0
+        $result = [
+            'Chờ' => 0,
+            'Còn thời hạn' => 0,
+            'Kết thúc' => 0,
+            'Hủy' => 0,
+        ];
+
+        foreach ($counts as $row) {
+            $result[$row->han_hop_dong] = $row->total;
+        }
+
+        return response()->json([
+            'status' => 'success',
+            'data' => $result
+        ]);
     }
 }

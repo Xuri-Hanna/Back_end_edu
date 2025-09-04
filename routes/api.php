@@ -20,6 +20,8 @@ use App\Http\Controllers\api\PhieuThuePhongController;
 use App\Http\Controllers\api\HopDongThuePhongController;
 use App\Http\Controllers\api\HoaDonThuePhongController;
 use App\Http\Controllers\api\CongNoController;
+use App\Http\Controllers\api\ThongKeController;
+
 
 
 Route::middleware('api')->get('/user', function (Request $request) {
@@ -76,6 +78,7 @@ Route::patch('/hoa_don_hoc_phis/{id}/trang_thai', [HoaDonHocPhiController::class
 //THUE PHÒNG
 Route::apiResource('phieu_thue_phongs',PhieuThuePhongController::class);
 Route::get('/hop_dong_thue_phongs', [HopDongThuePhongController::class, 'index']);
+Route::patch('/hop_dong_thue_phongs/{id}/trang_thai', [HopDongThuePhongController::class, 'updateTrangThai']);
 Route::get('/phieu_thue_phong/chua_co_hop_dongs', [PhieuThuePhongController::class, 'getChuaCoHopDong']);
 Route::post('/hop_dong_thue_phongs', [HopDongThuePhongController::class, 'store']);
 Route::get('/hop_dong_thue_phongs/by-phieu/{phieuId}', [HopDongThuePhongController::class, 'getByPhieu']);
@@ -86,3 +89,11 @@ Route::delete('/hoa_don/hop_dong/{hopDongId}', [HoaDonThuePhongController::class
 Route::get('/hop_dong/{id}/cong_no', [HopDongThuePhongController::class, 'congNo']);
 Route::get('/cong_no/{id}', [CongNoController::class, 'show']);
 
+//BÁO CÁO THỐNG KÊ
+Route::get('/thong_ke/tong_thu_nhaps', [ThongKeController::class, 'tongThuNhap']);
+Route::get('/thong_ke/phieu_thues', [ThongKeController::class, 'soPhieuThue']);
+Route::get('/thong_ke/khach_mois', [ThongKeController::class, 'soKhachMoi']);
+Route::get('/thong_ke/hop_dongs', [ThongKeController::class, 'soHopDong']);
+Route::get('/thong_ke/hop_dong_status', [HopDongThuePhongController::class, 'thongKeTrangThai']);
+Route::get('/thong_ke/top_nhan_vien_hop_dong', [ThongKeController::class, 'topNhanVienHopDong']);
+Route::get('/thong_ke/top_phong', [ThongKeController::class, 'topPhong']);

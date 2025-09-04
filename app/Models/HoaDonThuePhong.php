@@ -19,12 +19,18 @@ class HoaDonThuePhong extends Model
         'hop_dong_id',
         'ngay_lap',
         'tong_tien',
+        'nhan_vien_id'
     ];
 
     public function hopDongThuePhong()
     {
         return $this->belongsTo(HopDongThuePhong::class, 'hop_dong_id', 'id');
     }
+    public function nhanVien()
+    {
+        return $this->belongsTo(NhanVien::class, 'nhan_vien_id');
+    }
+
     // Khi hóa đơn được tạo -> update công nợ
     protected static function booted()
     {

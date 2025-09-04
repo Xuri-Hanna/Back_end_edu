@@ -22,7 +22,8 @@ class PhieuThuePhong extends Model
         'tu_ngay',
         'den_ngay',
         'lich_thue',
-        'trang_thai'
+        'trang_thai',
+        'ngay_lap'
     ];
 
     public function nhanVien()
