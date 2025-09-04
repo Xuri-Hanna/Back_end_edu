@@ -13,6 +13,18 @@ class HocSinhController extends Controller
         return response()->json(HocSinh::all(), 200);
     }
 
+    public function search(Request $request)
+    {
+        $keyword = $request->input('keyword');
+
+        $hocSinhs = HocSinh::when($keyword, function ($query, $keyword) {
+            $query->where('id', 'like', "%{$keyword}%")
+                ->orWhere('ho_ten', 'like', "%{$keyword}%");
+        })->get();
+
+        return response()->json($hocSinhs, 200);
+    }
+
     // Thêm học sinh mới
     public function store(Request $request)
     {
@@ -72,12 +84,26 @@ class HocSinhController extends Controller
     // Xóa học sinh
     public function destroy($id)
     {
-        $hocSinh = HocSinh::find($id);
-        if (!$hocSinh) {
-            return response()->json(['message' => 'Không tìm thấy học sinh'], 404);
-        }
+    //     $hocSinh = HocSinh::find($id);
+    //     if (!$hocSinh) {
+    //         return response()->json(['message' => 'Không tìm thấy học sinh'], 404);
+    //     }
 
+    //     $hocSinh->delete();
+    //     return response()->json(['message' => 'Xóa học sinh thành công'], 200);
+    try {
+        $hocSinh = HocSinh::findOrFail($id);
         $hocSinh->delete();
-        return response()->json(['message' => 'Xóa học sinh thành công'], 200);
-    }
+
+        return response()->json([
+            'status' => true,
+            'message' => 'Xóa học sinh thành công!'
+        ]);
+        } catch (\Illuminate\Database\QueryException $e) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Không thể xóa học sinh vì còn dữ liệu liên quan!'
+            ], 400);
+        }
+     }
 }

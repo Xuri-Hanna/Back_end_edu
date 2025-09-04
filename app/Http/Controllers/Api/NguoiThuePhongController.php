@@ -15,6 +15,18 @@ class NguoiThuePhongController extends Controller
         return response()->json($dsNguoiThue);
     }
 
+    public function search(Request $request)
+    {
+        $keyword = $request->input('keyword');
+
+        $nguoiThue = NguoiThuePhong::when($keyword, function ($query, $keyword) {
+            $query->where('id', 'like', "%{$keyword}%")
+                ->orWhere('ho_ten', 'like', "%{$keyword}%");
+        })->get();
+
+        return response()->json($nguoiThue, 200);
+    }
+
     // Thêm mới người thuê phòng
     public function store(Request $request)
     {
@@ -84,11 +96,25 @@ class NguoiThuePhongController extends Controller
     // Xóa người thuê phòng
     public function destroy($id)
     {
+        // $nguoiThue = NguoiThuePhong::findOrFail($id);
+        // $nguoiThue->delete();
+
+        // return response()->json([
+        //     'message' => 'Xóa người thuê phòng thành công'
+        // ]);
+    try {
         $nguoiThue = NguoiThuePhong::findOrFail($id);
         $nguoiThue->delete();
 
         return response()->json([
-            'message' => 'Xóa người thuê phòng thành công'
+            'status' => true,
+            'message' => 'Xóa người thuê phòng thành công!'
         ]);
+        } catch (\Illuminate\Database\QueryException $e) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Không thể xóa người thuê phòng vì còn dữ liệu liên quan!'
+            ], 400);
+        }
     }
 }

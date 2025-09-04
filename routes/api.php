@@ -33,6 +33,7 @@ Route::post('/login', [LoginController::class, 'login']);
 Route::post('/logout', [LoginController::class, 'logout'])->middleware('auth:sanctum');
 
 //HE THONG
+Route::post('/change-password', [TaiKhoanController::class, 'changePassword']);
 Route::apiResource('tai_khoans',TaiKhoanConTroller::class);
 Route::get('/get_tai_khoans', [TaiKhoanController::class, 'getUnused']);
 Route::apiResource('chuc_vus',ChucVuConTroller::class);
@@ -42,13 +43,19 @@ Route::get('/ten_don_vis', [DonViCongTacController::class, 'getTenDonVi']);
 
 
 //NHAN SU
+Route::get('/nhan_viens/search', [NhanVienController::class, 'search']);
 Route::apiResource('nhan_viens',NhanVienController::class);
+Route::get('/giao_viens/search', [GiaoVienController::class, 'search']);
 Route::apiResource('giao_viens',GiaoVienController::class);
+Route::get('/hoc_sinhs/search', [HocSinhController::class, 'search']);
 Route::apiResource('hoc_sinhs',HocSinhConTroller::class);
 
 //QUAN LY
+Route::get('/phong_hocs/search', [PhongHocController::class, 'search']);
 Route::apiResource('phong_hocs',PhongHocController::class);
+Route::get('/mon_hocs/search', [MonHocController::class, 'search']);
 Route::apiResource('mon_hocs',MonHocController::class);
+Route::get('/nguoi_thue_phongs/search', [NguoiThuePhongController::class, 'search']);
 Route::apiResource('nguoi_thue_phongs',NguoiThuePhongController::class);
 
 //SAP LICH
@@ -68,6 +75,8 @@ Route::post('/chi_tiet_lops', [ChiTietLopHocController::class, 'store']);
 Route::get('/lop_hocs/{lop_hoc_id}/hoc_sinhs', [ChiTietLopHocController::class, 'getHocSinhTheoLop']);
 Route::delete('/lop_hocs/{lop_hoc_id}/hoc_sinhs/{hoc_sinh_id}', [ChiTietLopHocController::class, 'destroyByPair']);
 Route::get('/lop_hocs/{lop_hoc_id}/hoc_sinhs/not_in', [ChiTietLopHocController::class, 'getHocSinhChuaThuocLop']);
+
+
 
 //HOA DON
 Route::apiResource('/hoa_don_hoc_phis',HoaDonHocPhiController::class);

@@ -17,6 +17,23 @@ class NhanVienController extends Controller
         return response()->json($nhanVien);
     }
 
+    
+    public function search(Request $request)
+    {
+        $keyword = $request->input('keyword');
+
+        $nhanVien = NhanVien::with(['chucVu', 'phongBan', 'taiKhoan'])
+            ->when($keyword, function ($query, $keyword) {
+                $query->where(function ($q) use ($keyword) {
+                    $q->where('id', 'like', "%{$keyword}%")
+                    ->orWhere('ho_ten', 'like', "%{$keyword}%");
+                });
+            })
+            ->get();
+
+        return response()->json($nhanVien);
+    }
+
     // Lấy thông tin 1 nhân viên
     public function show($id)
     {
@@ -27,11 +44,12 @@ class NhanVienController extends Controller
         return response()->json($nhanVien);
     }
 
+
     // Thêm nhân viên mới
    public function store(Request $request)
     {
         $request->validate([
-            'tai_khoan_id' => 'nullable|string|exists:tai_khoan,id',
+            'tai_khoan_id' => 'nullable|string|exists:tai_khoan,ID',
             'ho_ten'       => 'required|string|max:255',
             'cccd'         => 'required|string|max:20',
             'dia_chi'      => 'required|string',
@@ -63,7 +81,7 @@ class NhanVienController extends Controller
             'so_dien_thoai' => $request->so_dien_thoai,
             'email'         => $request->email,
             'chuc_vu_id'    => $request->chuc_vu_id,
-            'phong_ban_id'  => $request->phong_ban_id,
+            //'phong_ban_id'  => $request->phong_ban_id,
         ]);
         // Cập nhật trạng thái tài khoản
         TaiKhoan::where('ID', $request->tai_khoan_id)
@@ -81,7 +99,7 @@ class NhanVienController extends Controller
         }
 
         $request->validate([
-            'tai_khoan_id' => 'nullable|string|exists:tai_khoan,id',
+            'tai_khoan_id' => 'nullable|string|exists:tai_khoan,ID',
             'ho_ten'       => 'nullable|string|max:255',
             'cccd'         => 'nullable|string|max:20',
             'dia_chi'      => 'nullable|string',
@@ -91,24 +109,61 @@ class NhanVienController extends Controller
             'phong_ban_id' => 'nullable|string|exists:phong_ban,id',
         ]);
 
-        $nhanVien->update($request->all());
-        // Cập nhật trạng thái tài khoản
-        TaiKhoan::where('ID', $request->tai_khoan_id)
+        // $nhanVien->update($request->all());
+        // // Cập nhật trạng thái tài khoản
+        // TaiKhoan::where('ID', $request->tai_khoan_id)
+        //         ->update(['trang_thai' => 'Đã sử dụng']);
+
+        // return response()->json($nhanVien);
+
+        if ($request->has('tai_khoan_id') && $request->tai_khoan_id != $nhanVien->tai_khoan_id) {
+            // Mở lại tài khoản cũ
+            if ($nhanVien->tai_khoan_id) {
+                TaiKhoan::where('ID', $nhanVien->tai_khoan_id)
+                    ->update(['trang_thai' => 'Chưa sử dụng']);
+            }
+
+            // Đánh dấu tài khoản mới
+            TaiKhoan::where('ID', $request->tai_khoan_id)
                 ->update(['trang_thai' => 'Đã sử dụng']);
+        }
+
+        $nhanVien->update($request->all());
 
         return response()->json($nhanVien);
+
     }
 
     // Xóa nhân viên
     public function destroy($id)
     {
-        $nhanVien = NhanVien::find($id);
-        if (!$nhanVien) {
-            return response()->json(['message' => 'Không tìm thấy nhân viên'], 404);
-        }
+        // $nhanVien = NhanVien::find($id);
+        // if (!$nhanVien) {
+        //     return response()->json(['message' => 'Không tìm thấy nhân viên'], 404);
+        // }
+        
 
+        // $nhanVien->delete();
+
+        // return response()->json(['message' => 'Đã xóa nhân viên']);
+        try {
+        $nhanVien = NhanVien::findOrFail($id);
+        
+        if ($nhanVien->tai_khoan_id) {
+                TaiKhoan::where('ID', $nhanVien->tai_khoan_id)
+                    ->update(['trang_thai' => 'Chưa sử dụng']);
+        }
         $nhanVien->delete();
 
-        return response()->json(['message' => 'Đã xóa nhân viên']);
+        return response()->json([
+            'status' => true,
+            'message' => 'Xóa nhân viên thành công!'
+        ]);
+        } catch (\Illuminate\Database\QueryException $e) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Không thể xóa nhân viên vì còn dữ liệu liên quan!'
+            ], 400);
+        }
     }
 }

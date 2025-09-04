@@ -9,6 +9,8 @@ use App\Models\GiaoVien;
 use App\Models\NhanVien;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Auth;
 
 class TaiKhoanController extends Controller
 {
@@ -104,5 +106,31 @@ class TaiKhoanController extends Controller
         }
         $tk->delete();
         return response()->json(['message' => 'Xóa tài khoản thành công'], 200);
+    }
+
+    public function changePassword(Request $request)
+    {
+        $request->validate([
+            'username' => 'required|string',
+            'old_password' => 'required|string',
+            'new_password' => 'required|string|min:6',
+            'confirm_password' => 'required|string|same:new_password',
+
+        ]);
+
+        $user = TaiKhoan::where('username', $request->username)->first();
+
+        if (!$user) {
+            return response()->json(['message' => 'Không tìm thấy tài khoản'], 404);
+        }
+
+        if ($request->old_password !== $user->password) {
+            return response()->json(['message' => 'Mật khẩu hiện tại không đúng'], 400);
+        }
+
+        $user->password = $request->new_password;
+        $user->save();
+
+        return response()->json(['message' => 'Đổi mật khẩu thành công!'], 200);
     }
 }
