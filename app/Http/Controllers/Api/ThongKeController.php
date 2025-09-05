@@ -120,5 +120,79 @@ class ThongKeController extends Controller
 
         return response()->json($data);
     }
+    // GIÁO DỤC
+    public function doanhThuHocPhi(Request $request){
+        $startDate = $request->query('start_date');
+        $endDate   = $request->query('end_date');
+
+         $query = DB::table('hoa_don_hoc_phi')
+            ->whereDate('ngay_lap', '>=', $startDate)
+            ->whereDate('ngay_lap', '<=', $endDate)
+            ->where('trang_thai','Đã thanh toán');
+        $doanhthu = $query->sum('tong_tien');
+
+         return response()->json([
+            'doanh_thu_raw' => $doanhthu,
+            'doanh_thu_vn'  => number_format($doanhthu, 0, ',', '.') . ' VNĐ'
+        ]);
+    }
+    public function soHocSinh(){
+        $query = DB::table('hoc_sinh')->count();
+
+        return response()->json([
+            'so_luong_hoc_sinh' => $query,
+        ]);
+    }
+    public function lopHocStatus(Request $request)
+    {
+        // Thống kê số lớp theo trạng thái
+        $data = DB::table('lop_hoc')
+            ->select('trang_thai', DB::raw('count(*) as so_lop'))
+            ->groupBy('trang_thai')
+            ->get();
+
+        // Chuyển về dạng key-value
+        $result = [];
+        foreach ($data as $item) {
+            $result[$item->trang_thai] = $item->so_lop;
+        }
+
+        return response()->json($result);
+    }
+    public function topGiaoVien(Request $request)
+    {
+        $startDate = $request->query('start_date');
+        $endDate   = $request->query('end_date');
+
+        // Join bảng lop_hoc với giao_vien để lấy tên
+        $data = DB::table('lop_hoc as lh')
+            ->whereDate('ngay_bat_dau', '>=', $startDate)
+            ->whereDate('ngay_bat_dau', '<=', $endDate)
+            ->join('giao_vien as gv', 'lh.giao_vien_id', '=', 'gv.id')
+            ->select('gv.id', 'gv.ho_ten as ten', DB::raw('count(lh.id) as so_lop'))
+            ->groupBy('gv.id', 'gv.ho_ten')
+            ->orderByDesc('so_lop')
+            ->get();
+
+        return response()->json($data);
+    }
+     public function topMonHoc(Request $request)
+    {
+        $startDate = $request->query('start_date');
+        $endDate   = $request->query('end_date');
+
+        // Join bảng lop_hoc với giao_vien để lấy tên
+        $data = DB::table('lop_hoc as lh')
+            ->whereDate('ngay_bat_dau', '>=', $startDate)
+            ->whereDate('ngay_bat_dau', '<=', $endDate)
+            ->join('mon_hoc as mh', 'lh.mon_hoc_id', '=', 'mh.id')
+            ->select('mh.id', 'mh.mon_hoc as mon', DB::raw('count(lh.id) as so_lop'))
+            ->groupBy('mh.id', 'mh.mon_hoc')
+            ->orderByDesc('so_lop')
+            ->get();
+
+        return response()->json($data);
+    }
+
 }
 

@@ -106,3 +106,8 @@ Route::get('/thong_ke/hop_dongs', [ThongKeController::class, 'soHopDong']);
 Route::get('/thong_ke/hop_dong_status', [HopDongThuePhongController::class, 'thongKeTrangThai']);
 Route::get('/thong_ke/top_nhan_vien_hop_dong', [ThongKeController::class, 'topNhanVienHopDong']);
 Route::get('/thong_ke/top_phong', [ThongKeController::class, 'topPhong']);
+Route::get('/thong_ke/doanh_thu_hoc_phi', [ThongKeController::class, 'doanhThuHocPhi']);
+Route::get('/thong_ke/so_hoc_sinh', [ThongKeController::class, 'soHocSinh']);
+Route::get('/thong_ke/lop_hoc_status', [ThongKeController::class, 'lopHocStatus']);
+Route::get('/thong_ke/top_giao_vien', [ThongKeController::class, 'topGiaoVien']);
+Route::get('/thong_ke/top_mon_hoc', [ThongKeController::class, 'topMonHoc']);
