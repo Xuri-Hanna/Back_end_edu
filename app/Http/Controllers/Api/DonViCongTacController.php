@@ -14,6 +14,20 @@ class DonViCongTacController extends Controller
     {
         return response()->json(DonViCongTac::all());
     }
+
+     public function search(Request $request)
+    {
+        $keyword = $request->input('keyword');
+
+        $donVi = DonViCongTac::when($keyword, function ($query, $keyword) {
+            $query->where('id', 'like', "%{$keyword}%")
+                ->orWhere('ten_don_vi', 'like', "%{$keyword}%");
+        })->get();
+
+        return response()->json($donVi, 200);
+    }
+
+
      // Lấy danh sách tất cả đơn vị công tác (sắp xếp A-Z theo tên)
     public function getTenDonVi()
     {

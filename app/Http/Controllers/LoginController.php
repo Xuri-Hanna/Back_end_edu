@@ -65,6 +65,7 @@ class LoginController extends Controller
         return response()->json([
             'message' => 'Đăng nhập thành công',
             'role' => $role,
+            'id' => $userInfo->id,
             'user' => $userInfo,
             'full_name' => (string) $fullName,
         ]);
