@@ -15,6 +15,17 @@ class ChucVuController extends Controller
         return response()->json(ChucVu::all());
     }
 
+    public function search(Request $request)
+    {
+        $keyword = $request->input('keyword');
+
+        $chucVu = ChucVu::when($keyword, function ($query, $keyword) {
+            $query->Where('ten_chuc_vu', 'like', "%{$keyword}%");
+        })->get();
+
+        return response()->json($chucVu, 200);
+    }
+
     // Lấy danh sách chức vụ (id + tên) để fill dropdown
     public function getList()
     {

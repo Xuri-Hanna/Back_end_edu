@@ -34,10 +34,13 @@ Route::post('/logout', [LoginController::class, 'logout'])->middleware('auth:san
 
 //HE THONG
 Route::post('/change-password', [TaiKhoanController::class, 'changePassword']);
+Route::get('/tai_khoans/search', [TaiKhoanController::class, 'search']);
 Route::apiResource('tai_khoans',TaiKhoanConTroller::class);
 Route::get('/get_tai_khoans', [TaiKhoanController::class, 'getUnused']);
+Route::get('/chuc_vus/search', [ChucVuController::class, 'search']);
 Route::apiResource('chuc_vus',ChucVuConTroller::class);
 Route::get('/get_chuc_vus', [ChucVuController::class, 'getList']);
+Route::get('/don_vi_cong_tacs/search', [DonViCongTacController::class, 'search']);
 Route::apiResource('don_vi_cong_tacs', DonViCongTacController::class);
 Route::get('/ten_don_vis', [DonViCongTacController::class, 'getTenDonVi']);
 
@@ -85,6 +88,7 @@ Route::get('/hoa_don/hoc_sinh/{id}', [HoaDonHocPhiController::class, 'getByHocSi
 Route::patch('/hoa_don_hoc_phis/{id}/trang_thai', [HoaDonHocPhiController::class, 'updateTrangThai']);
 
 //THUE PHÒNG
+Route::get('/phieu_thue_phongs/search', [PhieuThuePhongController::class, 'search']);
 Route::apiResource('phieu_thue_phongs',PhieuThuePhongController::class);
 Route::get('/hop_dong_thue_phongs', [HopDongThuePhongController::class, 'index']);
 Route::patch('/hop_dong_thue_phongs/{id}/trang_thai', [HopDongThuePhongController::class, 'updateTrangThai']);
@@ -111,3 +115,7 @@ Route::get('/thong_ke/so_hoc_sinh', [ThongKeController::class, 'soHocSinh']);
 Route::get('/thong_ke/lop_hoc_status', [ThongKeController::class, 'lopHocStatus']);
 Route::get('/thong_ke/top_giao_vien', [ThongKeController::class, 'topGiaoVien']);
 Route::get('/thong_ke/top_mon_hoc', [ThongKeController::class, 'topMonHoc']);
+
+// BÁO CÁO DOANH THU THEO THÁNG
+Route::get('/thong_ke/doanh_thu_hoc_phi_theo_thang', [ThongKeController::class, 'doanhThuHocPhiTheoThang']);
+Route::get('/thong_ke/doanh_thu_thue_phong_theo_thang', [ThongKeController::class, 'doanhThuThuePhongTheoThang']);
