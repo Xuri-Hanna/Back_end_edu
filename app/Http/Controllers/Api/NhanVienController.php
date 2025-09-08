@@ -81,7 +81,7 @@ class NhanVienController extends Controller
             'so_dien_thoai' => $request->so_dien_thoai,
             'email'         => $request->email,
             'chuc_vu_id'    => $request->chuc_vu_id,
-            //'phong_ban_id'  => $request->phong_ban_id,
+            'phong_ban_id'  => $request->phong_ban_id ?: null,
         ]);
         // Cập nhật trạng thái tài khoản
         TaiKhoan::where('ID', $request->tai_khoan_id)

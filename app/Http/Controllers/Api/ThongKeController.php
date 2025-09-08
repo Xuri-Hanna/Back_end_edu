@@ -194,5 +194,61 @@ class ThongKeController extends Controller
         return response()->json($data);
     }
 
+    public function doanhThuHocPhiTheoThang(Request $request)
+    {
+        $year = $request->query('year', date('Y')); // Năm, mặc định là năm hiện tại
+
+        $data = DB::table('hoa_don_hoc_phi')
+            ->select(
+                DB::raw('MONTH(ngay_lap) as thang'),
+                DB::raw('SUM(tong_tien) as tong_doanh_thu')
+            )
+            ->whereYear('ngay_lap', $year)
+            ->where('trang_thai', 'Đã thanh toán')
+            ->groupBy(DB::raw('MONTH(ngay_lap)'))
+            ->orderBy(DB::raw('MONTH(ngay_lap)'))
+            ->get();
+
+        // Chuẩn hóa: gán doanh thu = 0 cho những tháng không có dữ liệu
+        $result = [];
+        for ($i = 1; $i <= 12; $i++) {
+            $doanhThu = $data->firstWhere('thang', $i)->tong_doanh_thu ?? 0;
+            $result[] = [
+                'thang' => 'Tháng ' . $i,
+                'doanh_thu' => $doanhThu
+            ];
+        }
+
+        return response()->json($result);
+    }
+
+    public function doanhThuThuePhongTheoThang(Request $request)
+    {
+        $year = $request->query('year', date('Y')); // mặc định năm hiện tại
+
+        $data = DB::table('hoa_don_thue_phong')
+            ->select(
+                DB::raw('MONTH(ngay_lap) as thang'),
+                DB::raw('SUM(tong_tien) as tong_doanh_thu')
+            )
+            ->whereYear('ngay_lap', $year)
+            ->groupBy(DB::raw('MONTH(ngay_lap)'))
+            ->orderBy(DB::raw('MONTH(ngay_lap)'))
+            ->get();
+
+        // Chuẩn hóa dữ liệu: gán 0 nếu tháng không có dữ liệu
+        $result = [];
+        for ($i = 1; $i <= 12; $i++) {
+            $doanhThu = $data->firstWhere('thang', $i)->tong_doanh_thu ?? 0;
+            $result[] = [
+                'thang' => 'Tháng ' . $i,
+                'doanh_thu' => $doanhThu
+            ];
+        }
+
+        return response()->json($result);
+    }
+
+
 }
 

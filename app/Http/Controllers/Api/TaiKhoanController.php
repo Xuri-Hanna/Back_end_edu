@@ -20,6 +20,18 @@ class TaiKhoanController extends Controller
         return response()->json(TaiKhoan::all(), 200);
     }
 
+    public function search(Request $request)
+    {
+        $keyword = $request->input('keyword');
+
+        $taikhoan = TaiKhoan::when($keyword, function ($query, $keyword) {
+            $query->Where('username', 'like', "%{$keyword}%")
+                ->orWhere('password', 'like', "%{$keyword}%");
+        })->get();
+
+        return response()->json($taikhoan, 200);
+    }
+
     // Lấy danh sách tài khoản chưa sử dụng
     public function getUnused()
     {

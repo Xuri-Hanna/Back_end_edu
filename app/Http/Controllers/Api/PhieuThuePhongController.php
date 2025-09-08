@@ -14,6 +14,32 @@ class PhieuThuePhongController extends Controller
         $phieuThue = PhieuThuePhong::with(['nhanVien', 'nguoiThuePhong', 'phongHoc','hopDongThuePhong'])->get();
         return response()->json($phieuThue);
     }
+
+
+    public function search(Request $request)
+    {
+        $query = PhieuThuePhong::query();
+
+        if ($request->keyword) {
+            $keyword = $request->keyword;
+            $query->where('id', 'like', "%$keyword%")
+                ->orWhere('trang_thai', 'like', "%{$keyword}%")
+                ->orWhereHas('nhanVien', fn($q) => $q->where('ho_ten', 'like', "%$keyword%"))
+                ->orWhereHas('nguoiThuePhong', fn($q) => $q->where('ho_ten', 'like', "%$keyword%"))
+                ->orWhereHas('phongHoc', fn($q) => $q->where('so_phong', 'like', "%$keyword%"));
+        }
+
+        if ($request->from_date && $request->to_date) {
+            $query->whereBetween('tu_ngay', [$request->from_date, $request->to_date]);
+        }
+        if ($request->status) {
+        $query->where('trang_thai', $request->status);
+        }
+
+        return response()->json($query->get());
+    }
+
+
     // Lấy danh sách phiếu thuê chưa có hợp đồng
     public function getChuaCoHopDong()
     {
@@ -109,9 +135,23 @@ class PhieuThuePhongController extends Controller
     // Xóa phiếu thuê phòng
     public function destroy($id)
     {
+        // $phieuThue = PhieuThuePhong::findOrFail($id);
+        // $phieuThue->delete();
+
+        // return response()->json(['message' => 'Xóa phiếu thuê phòng thành công']);
+        try {
         $phieuThue = PhieuThuePhong::findOrFail($id);
         $phieuThue->delete();
 
-        return response()->json(['message' => 'Xóa phiếu thuê phòng thành công']);
+        return response()->json([
+            'status' => true,
+            'message' => 'Xóa phiếu thuê phòng thành công!'
+        ]);
+        } catch (\Illuminate\Database\QueryException $e) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Không thể xóa phiếu thuê phòng vì còn dữ liệu liên quan!'
+            ], 400);
+        }
     }
 }
