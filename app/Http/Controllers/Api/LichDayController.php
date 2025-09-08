@@ -50,6 +50,16 @@ class LichDayController extends Controller
 
         return response()->json($lops);
     }
+     public function lichDayGiaoVien($giao_vien_id)
+    {
+        if($giao_vien_id){
+            $lops = LopHoc::with(['giaoViens', 'lichDays','phongHoc'])
+                ->where('giao_vien_id',$giao_vien_id)
+                ->where('trang_thai', 'Đang học','Sắp mở')
+                ->get();
+        }
+        return response()->json($lops);
+    }
     // App\Http\Controllers\LopHocController.php
    public function indexWithSchedule()
     {

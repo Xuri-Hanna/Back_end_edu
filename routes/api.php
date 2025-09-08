@@ -67,7 +67,7 @@ Route::post('/lop_hocs/{lopHoc}/lich_day/toggle', [LichDayController::class, 'to
 Route::get('lop_hocs/giao_vien/{giao_vien_id}', [LopHocController::class, 'getLopHocByGiaoVien']);
 Route::get('lich_day/dang_hocs', [LichDayController::class, 'lichDayDangHoc']);
 Route::get('/lop_hocs_with_schedules', [LichDayController::class, 'indexWithSchedule']);
-
+Route::get('/lich_day/giao_vien/{giao_vien_id}', [LichDayController::class, 'lichDayGiaoVien']);
 
 //LOP_HOC
 Route::apiResource('/lop_hocs',LopHocController::class);
