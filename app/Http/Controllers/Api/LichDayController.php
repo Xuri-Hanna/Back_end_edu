@@ -55,7 +55,7 @@ class LichDayController extends Controller
         if($giao_vien_id){
             $lops = LopHoc::with(['giaoViens', 'lichDays','phongHoc'])
                 ->where('giao_vien_id',$giao_vien_id)
-                ->where('trang_thai', 'Đang học','Sắp mở')
+                ->whereIn('trang_thai', ['Đang học','Sắp mở'])
                 ->get();
         }
         return response()->json($lops);
