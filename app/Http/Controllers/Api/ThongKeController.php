@@ -186,8 +186,8 @@ class ThongKeController extends Controller
             ->whereDate('ngay_bat_dau', '>=', $startDate)
             ->whereDate('ngay_bat_dau', '<=', $endDate)
             ->join('mon_hoc as mh', 'lh.mon_hoc_id', '=', 'mh.id')
-            ->select('mh.id', 'mh.mon_hoc as mon', DB::raw('count(lh.id) as so_lop'))
-            ->groupBy('mh.id', 'mh.mon_hoc')
+            ->select('mh.id', 'mh.khoi_lop as khoi', 'mh.mon_hoc as mon', DB::raw('count(lh.id) as so_lop'))
+            ->groupBy('mh.id', 'mh.mon_hoc', 'mh.khoi_lop')
             ->orderByDesc('so_lop')
             ->get();
 
