@@ -107,11 +107,18 @@ class HopDongThuePhongController extends Controller
             ],
             'nhan_vien' => [
                 'ho_ten'     => $phieuThue->nhanVien->ho_ten ?? '',
-                'chuc_vu'    => $phieuThue->nhanVien->chucVu->ten ?? '',
+                'chuc_vu'    => $phieuThue->nhanVien->chucVu->ten_chuc_vu ?? '',
                 'dia_chi'    => $phieuThue->nhanVien->dia_chi ?? '',
                 'dien_thoai' => $phieuThue->nhanVien->so_dien_thoai ?? '',
                 'email'      => $phieuThue->nhanVien->email ?? '',
             ],
+            // 'nhan_vien' => [
+            //     'ho_ten'     => $phieuThue->nhanVien->ho_ten ?? '',
+            //     'chuc_vu'    => $phieuThue->nhanVien->chucVu->ten ?? '',
+            //     'dia_chi'    => $phieuThue->nhanVien->dia_chi ?? '',
+            //     'dien_thoai' => $phieuThue->nhanVien->so_dien_thoai ?? '',
+            //     'email'      => $phieuThue->nhanVien->email ?? '',
+            // ],
             'phong' => [
                 'ten_phong'  => $phieuThue->phongHoc->so_phong ?? '',
                 'so_cho'     => $phieuThue->phongHoc->so_cho_ngoi ?? '',
