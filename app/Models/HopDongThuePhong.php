@@ -18,6 +18,7 @@ class HopDongThuePhong extends Model
     protected $fillable = [
         'id',
         'phieu_thue_phong_id',
+        'nhan_vien_id',
         'dieu_khoan',
         'thanh_tien',
         'cong_no_id',
@@ -33,5 +34,9 @@ class HopDongThuePhong extends Model
     public function congNo()
     {
         return $this->belongsTo(CongNo::class, 'cong_no_id', 'id');
+    }
+    public function nhanVien()
+    {
+        return $this->belongsTo(NhanVien::class, 'nhan_vien_id', 'id');
     }
 }
