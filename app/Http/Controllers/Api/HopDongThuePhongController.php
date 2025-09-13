@@ -60,6 +60,7 @@ class HopDongThuePhongController extends Controller
         $hopDong = HopDongThuePhong::create([
             'id' => $newId,
             'phieu_thue_phong_id' => $phieu->id,
+            'nhan_vien_id' => $request->nhan_vien_id,
             'dieu_khoan' => $request->dieu_khoan,
             'thanh_tien' => $thanhTien,
             'cong_no_id' => $congNo->id,
@@ -94,7 +95,9 @@ class HopDongThuePhongController extends Controller
             'nhanVien.chucVu',
             'nguoiThuePhong',
             'phongHoc',
-            'hopDongThuePhong'
+            //'hopDongThuePhong',
+            //thêm nhân viên lập hợp đồng
+            'hopDongThuePhong.nhanVien.chucVu'
         ])->findOrFail($phieuId);
 
         // Format dữ liệu trả về
@@ -131,12 +134,21 @@ class HopDongThuePhongController extends Controller
                 'trang_thai' => $phieuThue->hopDongThuePhong->trang_thai ?? '',
                 'cong_no_id' => $phieuThue->hopDongThuePhong->cong_no_id ?? '',
                 'id'         => $phieuThue->hopDongThuePhong->id ?? '',
-            ]
+                
+            ],
+            // nhân viên lập hợp đồng
+            'nhan_vien_hd' => [
+                    'ho_ten'     => $phieuThue->hopDongThuePhong->nhanVien->ho_ten ?? '',
+                    'chuc_vu'    => $phieuThue->hopDongThuePhong->nhanVien->chucVu->ten_chuc_vu ?? '',
+                    'dia_chi'    => $phieuThue->hopDongThuePhong->nhanVien->dia_chi ?? '',
+                    'dien_thoai' => $phieuThue->hopDongThuePhong->nhanVien->so_dien_thoai ?? '',
+                    'email'      => $phieuThue->hopDongThuePhong->nhanVien->email ?? '',
+                ],
         ];
 
         return response()->json($data);
     }
-        public function kiemTraHopDong($phieuId)
+    public function kiemTraHopDong($phieuId)
     {
         $hopDong = HopDongThuePhong::where('phieu_thue_phong_id', $phieuId)->first();
 
