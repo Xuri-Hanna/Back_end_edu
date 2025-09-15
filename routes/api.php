@@ -21,6 +21,7 @@ use App\Http\Controllers\api\HopDongThuePhongController;
 use App\Http\Controllers\api\HoaDonThuePhongController;
 use App\Http\Controllers\api\CongNoController;
 use App\Http\Controllers\api\ThongKeController;
+use App\Http\Controllers\api\ThoiGianHocController;
 
 
 
@@ -78,8 +79,7 @@ Route::post('/chi_tiet_lops', [ChiTietLopHocController::class, 'store']);
 Route::get('/lop_hocs/{lop_hoc_id}/hoc_sinhs', [ChiTietLopHocController::class, 'getHocSinhTheoLop']);
 Route::delete('/lop_hocs/{lop_hoc_id}/hoc_sinhs/{hoc_sinh_id}', [ChiTietLopHocController::class, 'destroyByPair']);
 Route::get('/lop_hocs/{lop_hoc_id}/hoc_sinhs/not_in', [ChiTietLopHocController::class, 'getHocSinhChuaThuocLop']);
-
-
+Route::apiResource('/thoi_gian_hocs', ThoiGianHocController::class);
 
 //HOA DON
 Route::apiResource('/hoa_don_hoc_phis',HoaDonHocPhiController::class);
