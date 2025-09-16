@@ -17,6 +17,7 @@ class LopHocController extends Controller
         return response()->json($data);
     }
 
+
     // Thêm lớp học
     public function store(Request $request)
     {
@@ -55,6 +56,24 @@ class LopHocController extends Controller
             'message' => 'Thêm lớp học thành công',
             'data' => $lopHoc
         ], 201);
+    }
+        public function search(Request $request)
+    {
+        $keyword = $request->input('keyword');
+
+        $lopHoc = LopHoc::with(['monHoc', 'giaoVien', 'phongHoc'])
+            ->when($keyword, function ($query, $keyword) {
+                $query->where(function ($q) use ($keyword) {
+                    $q->where('id', 'like', "%{$keyword}%")
+                    ->orWhere('ten_lop', 'like', "%{$keyword}%")
+                    ->orWhereHas('giaoVien', fn($q) => $q->where('ho_ten', 'like', "%$keyword%"))
+                    ->orWhereHas('monHoc', fn($q) => $q->where('mon_hoc', 'like', "%$keyword%"))
+                    ->orWhereHas('phongHoc', fn($q) => $q->where('so_phong', 'like', "%$keyword%"));
+                });
+            })
+            ->get();
+
+        return response()->json($lopHoc);
     }
 
     // Xem chi tiết 1 lớp học

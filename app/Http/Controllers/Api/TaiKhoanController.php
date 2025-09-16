@@ -26,7 +26,8 @@ class TaiKhoanController extends Controller
 
         $taikhoan = TaiKhoan::when($keyword, function ($query, $keyword) {
             $query->Where('username', 'like', "%{$keyword}%")
-                ->orWhere('password', 'like', "%{$keyword}%");
+                ->orWhere('password', 'like', "%{$keyword}%")
+                ->orWhere('id', 'like', "%{$keyword}%");
         })->get();
 
         return response()->json($taikhoan, 200);

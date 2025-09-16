@@ -74,6 +74,7 @@ Route::get('/lop_hocs_with_schedules', [LichDayController::class, 'indexWithSche
 Route::get('/lich_day/giao_vien/{giao_vien_id}', [LichDayController::class, 'lichDayGiaoVien']);
 
 //LOP_HOC
+Route::get('/lop_hocs/search', [LopHocController::class, 'search']);
 Route::apiResource('/lop_hocs',LopHocController::class);
 Route::post('/chi_tiet_lops', [ChiTietLopHocController::class, 'store']);
 Route::get('/lop_hocs/{lop_hoc_id}/hoc_sinhs', [ChiTietLopHocController::class, 'getHocSinhTheoLop']);
