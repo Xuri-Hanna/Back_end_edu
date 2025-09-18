@@ -81,6 +81,7 @@ Route::get('/lop_hocs/{lop_hoc_id}/hoc_sinhs', [ChiTietLopHocController::class, 
 Route::delete('/lop_hocs/{lop_hoc_id}/hoc_sinhs/{hoc_sinh_id}', [ChiTietLopHocController::class, 'destroyByPair']);
 Route::get('/lop_hocs/{lop_hoc_id}/hoc_sinhs/not_in', [ChiTietLopHocController::class, 'getHocSinhChuaThuocLop']);
 Route::apiResource('/thoi_gian_hocs', ThoiGianHocController::class);
+Route::get('/lop_hoc/{id}/hoc_sinh', [ChiTietLopHocController::class, 'getDSLopHocByHocSinh']);
 
 //HOA DON
 Route::apiResource('/hoa_don_hoc_phis',HoaDonHocPhiController::class);

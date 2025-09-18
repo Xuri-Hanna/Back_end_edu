@@ -92,10 +92,21 @@ class ChiTietLopHocController extends Controller
     }
     public function getLopHocByHocSinh($hocSinhId)
     {
-        $lopHocs = ChiTietLopHoc::where('hoc_sinh_id', $hocSinhId)
-            ->with('lopHoc:id,ten_lop') // join sang bảng lop_hoc
-            ->get()
-            ->pluck('lopHoc');
+        $lopHocs = ChiTietLopHoc::join('lop_hoc', 'chi_tiet_lop_hoc.lop_hoc_id', '=', 'lop_hoc.id')
+            ->where('chi_tiet_lop_hoc.hoc_sinh_id', $hocSinhId)
+            ->where('lop_hoc.trang_thai', 'Đang học')
+            ->select('lop_hoc.id', 'lop_hoc.ten_lop', 'lop_hoc.trang_thai')
+            ->get();
+
+        return response()->json($lopHocs);
+    }
+       public function getDSLopHocByHocSinh($hocSinhId)
+    {
+         $lopHocs = ChiTietLopHoc::join('lop_hoc', 'chi_tiet_lop_hoc.lop_hoc_id', '=', 'lop_hoc.id')
+            ->where('chi_tiet_lop_hoc.hoc_sinh_id', $hocSinhId)
+            ->whereIn('lop_hoc.trang_thai', ['Đang học', 'Sắp mở'])
+            ->select('lop_hoc.id', 'lop_hoc.ten_lop', 'lop_hoc.trang_thai')
+            ->get();
 
         return response()->json($lopHocs);
     }

@@ -48,7 +48,13 @@ class LichDayController extends Controller
             ->where('trang_thai', 'Đang học')
             ->get();
 
-        return response()->json($lops);
+        // Sắp xếp theo số phòng (ví dụ P101 → 101)
+        $sorted = $lops->sortBy(function($lop) {
+            if (!$lop->phongHoc || !$lop->phongHoc->so_phong) return PHP_INT_MAX;
+            // Lấy phần số từ chuỗi P101
+            return (int) preg_replace('/[^0-9]/', '', $lop->phongHoc->so_phong);
+        })->values();
+        return response()->json($sorted);
     }
      public function lichDayGiaoVien($giao_vien_id)
     {
