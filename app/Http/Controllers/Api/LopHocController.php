@@ -7,13 +7,36 @@ use Illuminate\Http\Request;
 use App\Models\LopHoc;
 use App\Models\ChiTietLopHoc;
 use App\Models\HocSinh;
+use Carbon\Carbon;
 
 class LopHocController extends Controller
 {
     // Lấy danh sách tất cả lớp học
+
+    private function updateTrangThaiTuDong()
+    {
+        $now = Carbon::now();
+        $lopHocList = LopHoc::all();
+
+        foreach ($lopHocList as $lop) {
+            if ($lop->trang_thai !== 'Đã hủy') { // bỏ qua lớp đã hủy
+                if ($now->lt(Carbon::parse($lop->ngay_bat_dau))) {
+                    $lop->trang_thai = 'Sắp mở';
+                } elseif ($now->between(Carbon::parse($lop->ngay_bat_dau), Carbon::parse($lop->ngay_ket_thuc))) {
+                    $lop->trang_thai = 'Đang học';
+                } elseif ($now->gte(Carbon::parse($lop->ngay_ket_thuc))) {
+                    $lop->trang_thai = 'Đã kết thúc';
+                }
+                $lop->save();
+            }
+        }
+    }
+    
     public function index()
     {
+        $this->updateTrangThaiTuDong();
         $data = LopHoc::with(['monHoc', 'giaoVien', 'phongHoc'])->get();
+
         return response()->json($data);
     }
 
