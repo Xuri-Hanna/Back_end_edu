@@ -51,12 +51,16 @@ class NhanVienController extends Controller
         $request->validate([
             'tai_khoan_id' => 'nullable|string|exists:tai_khoan,ID',
             'ho_ten'       => 'required|string|max:255',
-            'cccd'         => 'required|string|max:20',
+            'cccd'         => 'required|string|max:20|unique:nhan_vien,cccd',
             'dia_chi'      => 'required|string',
-            'so_dien_thoai'=> 'required|string|max:20',
-            'email'        => 'required|email|max:255',
+            'so_dien_thoai'=> 'required|string|max:20|unique:nhan_vien,so_dien_thoai',
+            'email'        => 'required|email|max:255|unique:nhan_vien,email',
             'chuc_vu_id'   => 'required|string|exists:chuc_vu,id',
             'phong_ban_id' => 'nullable|string|exists:phong_ban,id',
+        ], [
+            'cccd.unique'          => 'CCCD này đã tồn tại trong hệ thống.',
+            'so_dien_thoai.unique' => 'Số điện thoại này đã được sử dụng.',
+            'email.unique' => 'Email này đã được sử dụng.',
         ]);
 
         // Lấy ID lớn nhất hiện tại
@@ -101,12 +105,16 @@ class NhanVienController extends Controller
         $request->validate([
             'tai_khoan_id' => 'nullable|string|exists:tai_khoan,ID',
             'ho_ten'       => 'nullable|string|max:255',
-            'cccd'         => 'nullable|string|max:20',
+            'cccd'         => 'nullable|string|max:20|unique:nhan_vien,cccd,' . $id . ',id',
             'dia_chi'      => 'nullable|string',
-            'so_dien_thoai'=> 'nullable|string|max:20',
-            'email'        => 'nullable|email|max:255',
+            'so_dien_thoai'=> 'nullable|string|max:20|unique:nhan_vien,so_dien_thoai,'. $id . ',id',
+            'email'        => 'nullable|email|max:255|unique:nhan_vien,email,'. $id . ',id',
             'chuc_vu_id'   => 'nullable|string|exists:chuc_vu,id',
             'phong_ban_id' => 'nullable|string|exists:phong_ban,id',
+        ], [
+            'cccd.unique'          => 'CCCD này đã tồn tại trong hệ thống.',
+            'so_dien_thoai.unique' => 'Số điện thoại này đã được sử dụng.',
+            'email.unique' => 'Email này đã được sử dụng.',
         ]);
 
         // $nhanVien->update($request->all());

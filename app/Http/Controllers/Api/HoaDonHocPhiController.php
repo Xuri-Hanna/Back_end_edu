@@ -46,6 +46,10 @@ class HoaDonHocPhiController extends Controller
             'lop_hoc_id' => 'required|exists:lop_hoc,id',
             'nhan_vien_id' => 'required|exists:nhan_vien,id',
             'ngay_het_han' => 'required|date|after:today', // phải lớn hơn ngày hiện tại
+        ], [
+            'ngay_het_han.after' => 'Ngày hết hạn phải bằng hoặc sau ngày lập hóa đơn',
+            'ngay_het_han.required' => 'Vui lòng chọn ngày hết hạn',
+            'ngay_het_han.date' => 'Ngày hết hạn không hợp lệ',
         ]);
 
         $lopHoc = LopHoc::findOrFail($request->lop_hoc_id);
@@ -64,6 +68,10 @@ class HoaDonHocPhiController extends Controller
             'ngay_het_han' => $request->ngay_het_han,
             'tong_tien' => $tongTien,
             'trang_thai' => 'Chưa thanh toán'
+        ], [
+            'ngay_het_han.after' => 'Ngày hết hạn phải bằng hoặc sau ngày lập hóa đơn',
+            'ngay_het_han.required' => 'Vui lòng chọn ngày hết hạn',
+            'ngay_het_han.date' => 'Ngày hết hạn không hợp lệ',
         ]);
 
         return response()->json([
