@@ -50,11 +50,15 @@ class GiaoVienController extends Controller
             'tai_khoan_id'       => 'nullable|string|exists:tai_khoan,ID',
             'chuc_vu_id'         => 'nullable|string|exists:chuc_vu,id',
             'ho_ten'             => 'required|string|max:255',
-            'cccd'               => 'required|string|max:20',
+            'cccd'               => 'required|string|max:20|unique:giao_vien,cccd',
             'dia_chi'            => 'required|string',
-            'so_dien_thoai'      => 'required|string|max:20',
-            'email'              => 'required|email|max:255',
+            'so_dien_thoai'      => 'required|string|max:20|unique:giao_vien,so_dien_thoai',
+            'email'              => 'required|email|max:255|unique:giao_vien,email',
             'don_vi_cong_tac_id' => 'nullable|string|exists:don_vi_cong_tac,id',
+        ], [
+            'cccd.unique'          => 'CCCD này đã tồn tại trong hệ thống.',
+            'so_dien_thoai.unique' => 'Số điện thoại này đã được sử dụng.',
+            'email.unique'          => 'Email này đã tồn tại trong hệ thống.',
         ]);
 
         // Lấy ID lớn nhất hiện tại
@@ -102,11 +106,15 @@ class GiaoVienController extends Controller
             'tai_khoan_id'       => 'nullable|string|exists:tai_khoan,ID',
             'chuc_vu_id'         => 'nullable|string|exists:chuc_vu,id',
             'ho_ten'             => 'required|string|max:255',
-            'cccd'               => 'required|string|max:20',
+            'cccd'               => 'required|string|max:20|unique:giao_vien,cccd,' . $id . ',id',
             'dia_chi'            => 'required|string',
-            'so_dien_thoai'      => 'required|string|max:20',
-            'email'              => 'required|email|max:255',
+            'so_dien_thoai'      => 'required|string|max:20|unique:giao_vien,so_dien_thoai,' . $id . ',id',
+            'email'              => 'required|email|max:255|unique:giao_vien,email,' . $id . ',id',
             'don_vi_cong_tac_id' => 'nullable|string|exists:don_vi_cong_tac,id',
+        ], [
+            'cccd.unique'          => 'CCCD này đã tồn tại trong hệ thống.',
+            'so_dien_thoai.unique' => 'Số điện thoại này đã được sử dụng.',
+            'email.unique'          => 'Email này đã tồn tại trong hệ thống.',
         ]);
 
         // $giaoVien->update($request->all());

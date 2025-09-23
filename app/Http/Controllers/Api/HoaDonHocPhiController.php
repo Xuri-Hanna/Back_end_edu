@@ -45,7 +45,11 @@ class HoaDonHocPhiController extends Controller
             'hoc_sinh_id' => 'required|exists:hoc_sinh,id',
             'lop_hoc_id' => 'required|exists:lop_hoc,id',
             'nhan_vien_id' => 'required|exists:nhan_vien,id',
-            'ngay_het_han' => 'required|date|after:today',
+            'ngay_het_han' => 'required|date|after:today', // phải lớn hơn ngày hiện tại
+        ], [
+            'ngay_het_han.after' => 'Ngày hết hạn phải bằng hoặc sau ngày lập hóa đơn',
+            'ngay_het_han.required' => 'Vui lòng chọn ngày hết hạn',
+            'ngay_het_han.date' => 'Ngày hết hạn không hợp lệ',
         ]);
 
         $lopHoc = LopHoc::findOrFail($request->lop_hoc_id);
@@ -60,10 +64,14 @@ class HoaDonHocPhiController extends Controller
             'hoc_sinh_id' => $request->hoc_sinh_id,
             'nhan_vien_id' => $request->nhan_vien_id,
             'lop_hoc_id' => $lopHoc->id,
-            'ngay_lap' => Carbon::now()->toDateString(), 
+            'ngay_lap' => Carbon::now()->toDateString(),
             'ngay_het_han' => $request->ngay_het_han,
             'tong_tien' => $tongTien,
             'trang_thai' => 'Chưa thanh toán'
+        ], [
+            'ngay_het_han.after' => 'Ngày hết hạn phải bằng hoặc sau ngày lập hóa đơn',
+            'ngay_het_han.required' => 'Vui lòng chọn ngày hết hạn',
+            'ngay_het_han.date' => 'Ngày hết hạn không hợp lệ',
         ]);
 
         return response()->json([

@@ -68,6 +68,9 @@ class PhieuThuePhongController extends Controller
             'lich_thue' => 'nullable|string|max:50',
             'trang_thai' => 'required|in:Đã có hợp đồng,Chưa có hợp đồng',
             'ngay_lap'  =>  'nullable|date'
+        ], [
+            'den_ngay.after_or_equal' => 'Ngày kết thúc phải lớn hơn hoặc bằng ngày bắt đầu',
+            'tu_ngay.required' => 'Ngày bắt đầu là bắt buộc',
         ]);
 
        // Lấy ID cuối cùng trong DB
@@ -100,7 +103,7 @@ class PhieuThuePhongController extends Controller
             'message' => 'Tạo phiếu thuê phòng thành công',
             'data' => $phieuThue
         ], 201);
-    }
+    } 
 
     // Cập nhật phiếu thuê phòng
     public function update(Request $request, $id)

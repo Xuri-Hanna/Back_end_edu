@@ -37,6 +37,10 @@ class NguoiThuePhongController extends Controller
             'cccd'         => 'required|string|max:20|unique:nguoi_thue_phong,cccd',
             'dia_chi'      => 'nullable|string',
             'email'        => 'nullable|email|max:255|unique:nguoi_thue_phong,email',
+        ], [
+            'cccd.unique'          => 'CCCD này đã tồn tại trong hệ thống.',
+            'so_dien_thoai.unique' => 'Số điện thoại này đã được sử dụng.',
+            'email.unique' => 'Email này đã được sử dụng.',
         ]);
 
         // Sinh id tự động: NTP001, NTP002...
@@ -76,6 +80,10 @@ class NguoiThuePhongController extends Controller
             'cccd'         => 'required|string|max:20|unique:nguoi_thue_phong,cccd,' . $id . ',id',
             'dia_chi'      => 'nullable|string',
             'email'        => 'nullable|email|max:255|unique:nguoi_thue_phong,email,' . $id . ',id',
+        ], [
+            'cccd.unique'          => 'CCCD này đã tồn tại trong hệ thống.',
+            'so_dien_thoai.unique' => 'Số điện thoại này đã được sử dụng.',
+            'email.unique' => 'Email này đã được sử dụng.',
         ]);
 
         $nguoiThue->update($request->only([
