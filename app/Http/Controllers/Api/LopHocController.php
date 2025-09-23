@@ -35,7 +35,7 @@ class LopHocController extends Controller
             'so_buoi'       => 'required|integer|min:1',
         ]);
 
-        // 👉 Lấy ID lớn nhất hiện tại
+        //  Lấy ID lớn nhất hiện tại
         $lastId = LopHoc::orderBy('id', 'desc')->value('id');
 
         if ($lastId) {
@@ -44,10 +44,10 @@ class LopHocController extends Controller
             $number = 1;
         }
 
-        // 👉 Format thành LH001, LH002, ...
+        //  Format thành LH001, LH002, ...
         $newId = 'LH' . str_pad($number, 3, '0', STR_PAD_LEFT);
 
-        // 👉 Tạo lớp học mới
+        //  Tạo lớp học mới
         $lopHoc = LopHoc::create(array_merge($validated, [
             'id' => $newId
         ]));
